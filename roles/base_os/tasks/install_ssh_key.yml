@@ -1,0 +1,41 @@
+---
+  - name: Create the Ansible group
+    group:
+      name: ansible
+      state: present
+      gid: 1337
+    remote_user: root
+
+  - name: Create the Ansible user and generate it's SSH key.
+    user:
+      name: ansible
+      comment: "Ansible service account"
+      uid: 1337
+      group: ansible
+      generate_ssh_key: yes
+      state: present
+    remote_user: root
+
+  - name: Add sudoers users to wheel group
+    user:
+      name: "ansible"
+      groups: wheel
+      append: yes
+    remote_user: root
+
+  - name: Allow 'wheel' group to have passwordless sudo
+    lineinfile:
+      dest: /etc/sudoers
+      state: present
+      regexp: '^%wheel'
+      line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+      validate: visudo -cf %s
+    remote_user: root
+
+  - name: Set authorized key taken from file
+    authorized_key:
+      user: ansible
+      state: present
+      ## Yes, it's an embedded key. It's not in use in any real systems anywhere.
+      key: "{{ SSH_PUBLIC_KEY }}"
+    remote_user: root

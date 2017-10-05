@@ -1,0 +1,4 @@
+---
+
+- name: "Test connectivity to the {{ inventory_hostname }} node."
+  ping:

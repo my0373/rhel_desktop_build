@@ -1,0 +1,14 @@
+---
+  # Configure the desktop machine from standard RHEL / CentOS desktop build
+  # to a secure desktop system.
+  - name: Test conectivity to the desktop machine
+    include: ping.yml
+    tags: ['ping','setup']
+
+  - name: Configure the Ansible user
+    include: install_ssh_key.yml
+    tags: ['ansible_user','setup']
+
+  - name: Check if the kernel needs to be updated
+    include: kernel.yml
+    tags: ['check_reboot','setup']

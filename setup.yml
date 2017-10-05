@@ -1,0 +1,5 @@
+---
+- name: Configure the desktop hosts to be compliant and secure
+  hosts: all
+  roles:
+     - role: base_os
